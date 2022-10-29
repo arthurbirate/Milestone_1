@@ -1,0 +1,54 @@
+# Birate Kabanza Arthur
+# the version of the compose file
+version: "3"
+
+# services represent the containers to be created 
+services:
+   #  the apache2 container defined as web
+    web:
+      #   naming the container
+       container_name: contapa2-m1-birate
+      # builds the image from the dockerfile and start the services that were
+      # defined
+       build:
+          dockerfile: Dockerfile
+         #   mounts source directories from host(computer) at target paths inside the container
+       volumes:
+         - "./sites:/var/www/html"
+         # here the port 8085 of the host is mapped to the port 80 of container:
+         # container
+       ports:
+         - 8085:80  
+          
+   #  phpmyadmin container defined as backend
+    backend:
+      image: phpmyadmin:latest
+
+      # here the port 8002 of the host is mapped to the port 80 of container:
+      ports:
+         - 8002:80
+ 
+
+   #  the container running mysql defined as db
+    db:
+
+     image: mysql:latest
+     container_name: contsql1-m1-birate
+       
+   #    here we give the container access to the database by setting the environment variables
+   #     as our database credentials.
+     environment:
+   #   the databse
+       MYSQL_DATABASE: milestone
+      #  the username
+       MYSQL_USER: Birate
+      #  the password
+       MYSQL_PASSWORD: gagaarthur     
+      #  to allow the container to start with a blank password or else the 
+      #  build will stop
+       MYSQL_ALLOW_EMPTY_PASSWORD: 1  
+      #  to store our database so everytime we refresh or shut down the container
+      #   we do not lose the database
+     volumes:
+         - "./database:/docker-entrypoint-initdb.d"
+
